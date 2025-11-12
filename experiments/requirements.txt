@@ -1,0 +1,66 @@
+accelerate==0.31.0
+asttokens @ file:///C:/b/abs_9662ywy9fp/croot/asttokens_1743630464377/work
+bitsandbytes==0.45.2
+certifi==2025.10.5
+charset-normalizer==3.4.4
+colorama @ file:///C:/ci_311/colorama_1676422310965/work
+comm @ file:///C:/b/abs_67a8058udb/croot/comm_1709322909844/work
+debugpy @ file:///C:/miniconda3/conda-bld/debugpy_1757067193434/work
+decorator @ file:///C:/miniconda3/conda-bld/decorator_1757341249812/work
+diffusers==0.29.0
+executing @ file:///C:/miniconda3/conda-bld/executing_1757061250618/work
+filelock==3.20.0
+fsspec==2025.10.0
+hf-xet==1.1.10
+huggingface-hub==0.36.0
+idna==3.11
+importlib_metadata==8.7.0
+ipykernel @ file:///C:/miniconda3/conda-bld/ipykernel_1757583382905/work
+ipython @ file:///C:/miniconda3/conda-bld/ipython_1759328513319/work
+ipython_pygments_lexers @ file:///C:/b/abs_b66hj1lo19/croot/ipython_pygments_lexers_1744753262043/work
+ipywidgets==8.1.8
+jedi @ file:///C:/b/abs_3a2kbnlclc/croot/jedi_1733987412687/work
+Jinja2==3.1.6
+jupyter_client @ file:///C:/b/abs_149bw133if/croot/jupyter_client_1737570986926/work
+jupyter_core @ file:///C:/b/abs_7c6fipznw3/croot/jupyter_core_1751991383524/work
+jupyterlab_widgets==3.0.16
+MarkupSafe==3.0.3
+matplotlib-inline @ file:///C:/miniconda3/conda-bld/matplotlib-inline_1758520223000/work
+mpmath==1.3.0
+nest-asyncio @ file:///C:/b/abs_65d6lblmoi/croot/nest-asyncio_1708532721305/work
+networkx==3.5
+numpy==2.3.4
+packaging @ file:///C:/miniconda3/conda-bld/packaging_1761049096285/work
+pandas==2.2.3
+parso @ file:///C:/b/abs_834b4mj92b/croot/parso_1733963322289/work
+peft==0.9.0
+pillow==12.0.0
+platformdirs @ file:///C:/b/abs_ddh15014or/croot/platformdirs_1744273060660/work
+prompt_toolkit @ file:///C:/miniconda3/conda-bld/prompt-toolkit_1761745034319/work
+psutil @ file:///C:/miniconda3/conda-bld/psutil_1761896536656/work
+pure_eval @ file:///C:/miniconda3/conda-bld/pure_eval_1757067065603/work
+Pygments @ file:///C:/b/abs_e4bg5vh5j_/croot/pygments_1744667628203/work
+python-dateutil @ file:///C:/b/abs_3au_koqnbs/croot/python-dateutil_1716495777160/work
+pytz==2025.2
+pywin32 @ file:///C:/b/abs_6c9w_vp9zi/croot/pywin32_1754670534373/work
+PyYAML==6.0.3
+pyzmq @ file:///C:/miniconda3/conda-bld/pyzmq_1758103951316/work
+regex==2025.11.3
+requests==2.32.5
+safetensors==0.4.3
+six @ file:///C:/b/abs_149wuyuo1o/croot/six_1744271521515/work
+stack_data @ file:///C:/miniconda3/conda-bld/stack_data_1757067061065/work
+sympy==1.13.1
+tokenizers==0.19.1
+torch==2.6.0
+torchvision==0.21.0
+tornado @ file:///C:/b/abs_7dzpc171lf/croot/tornado_1748956950306/work
+tqdm==4.67.1
+traitlets @ file:///C:/b/abs_bfsnoxl4pq/croot/traitlets_1718227069245/work
+transformers==4.43.4
+typing_extensions @ file:///C:/b/abs_ecq8gc0vbm/croot/typing_extensions_1756281142218/work
+tzdata==2025.2
+urllib3==2.5.0
+wcwidth @ file:///C:/b/abs_0c8p4c33bp/croot/wcwidth_1750352902378/work
+widgetsnbextension==4.0.15
+zipp==3.23.0
