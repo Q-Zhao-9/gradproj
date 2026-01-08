@@ -121,9 +121,51 @@ def parse_annotation_xml(path: str) -> Dict[str, Any]:
 
 if __name__ == "__main__":
     import argparse
+    from tqdm import tqdm
+    from shutil import copyfile
+    import pandas as pd
+    # p = argparse.ArgumentParser()
+    # p.add_argument("xml",required=False, help="Path to annotation xml")
+    # args = p.parse_args()
+    lesion_info_file = r'C:\Users\50183\Downloads\lesion_info.csv'
+    # Load lesion info as dict
+    lesion_df = pd.read_csv(lesion_info_file)
+    lesion_info = lesion_df.set_index('unique_object_id')['histology_class'].to_dict()
+    # # need to skip the header
+    # with open(lesion_info_file, 'r') as f:
+    #     lines = f.readlines()
+    #     lines = lines[1:]  # skip header
+    #     for line in lines:
+    #         parts = line.strip().split(',')
+    #         if len(parts) >= 2:
+    #             lesion_info[parts[0]] = parts[-1]  # lesion_id: histology_class
+    print(f"Loaded lesion info for {len(lesion_info)} lesions.")
 
-    p = argparse.ArgumentParser()
-    p.add_argument("xml", help="Path to annotation xml")
-    args = p.parse_args()
-    parsed = parse_annotation_xml(args.xml)
-    print(json.dumps(parsed, indent=2, ensure_ascii=False))
+    annotation_xml_dir = "C:/Users/50183/Downloads/001-001_annotations/001-001_annotations"
+    images_dir = r'C:\Users\50183\Downloads\001-001_frames\001-001_frames'
+    output_dir = r'C:\COMP9800\Dataset\real-colon-seg'
+    xml_files = [f for f in os.listdir(annotation_xml_dir) if f.endswith(".xml")]
+    img_with_lesions = []
+    for xml_file in tqdm(xml_files):
+        file_path = os.path.join(annotation_xml_dir, xml_file)
+        parsed = parse_annotation_xml(file_path)
+        if parsed['entities']:
+            img_with_lesions.append(parsed['image'])
+            img_path = os.path.join(images_dir, parsed['image'])
+            target_img_path = os.path.join(output_dir,'images', parsed['image'])
+            target_annotation_path = os.path.join(output_dir,'annotations', xml_file.replace('.xml','.json'))
+            if os.path.exists(img_path):
+                # Copy the image to output_dir
+                copyfile(img_path, target_img_path)
+                copyfile(file_path, os.path.join(output_dir,'annotations', xml_file))
+                json.dump(parsed, open(target_annotation_path,'w'), indent=4)
+                # save the parsed bbox as csv file: class_name, xmin, ymin, xmax, ymax
+                csv_file_path = os.path.join(output_dir, 'bbox', xml_file.replace('.xml','.csv'))
+                with open(csv_file_path, 'w') as f:
+                    f.write("class_name,xmin,ymin,xmax,ymax\n")
+                    for lesion_id, entity in parsed['entities'].items():
+                        if entity['bounds']:
+                            class_name = lesion_info.get(lesion_id, 'polyp')
+                            xmin, ymin, xmax, ymax = entity['bounds']
+                            f.write(f"{class_name},{xmin},{ymin},{xmax},{ymax}\n")
+    print('Annotated images:',len(img_with_lesions))
