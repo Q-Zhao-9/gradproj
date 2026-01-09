@@ -30,7 +30,7 @@ import os
 import json
 from typing import Any, Dict, Optional
 import xml.etree.ElementTree as ET
-
+import cv2
 
 def _text(e: Optional[ET.Element]) -> Optional[str]:
     if e is None or e.text is None:
@@ -127,26 +127,32 @@ if __name__ == "__main__":
     # p = argparse.ArgumentParser()
     # p.add_argument("xml",required=False, help="Path to annotation xml")
     # args = p.parse_args()
-    lesion_info_file = r'C:\Users\50183\Downloads\lesion_info.csv'
+    lesion_info_file = r'/media/qzhao9/backup/downloads/real-colon/lesion_info.csv'
     # Load lesion info as dict
     lesion_df = pd.read_csv(lesion_info_file)
     lesion_info = lesion_df.set_index('unique_object_id')['histology_class'].to_dict()
-    # # need to skip the header
-    # with open(lesion_info_file, 'r') as f:
-    #     lines = f.readlines()
-    #     lines = lines[1:]  # skip header
-    #     for line in lines:
-    #         parts = line.strip().split(',')
-    #         if len(parts) >= 2:
-    #             lesion_info[parts[0]] = parts[-1]  # lesion_id: histology_class
-    print(f"Loaded lesion info for {len(lesion_info)} lesions.")
 
-    annotation_xml_dir = "C:/Users/50183/Downloads/001-001_annotations/001-001_annotations"
-    images_dir = r'C:\Users\50183\Downloads\001-001_frames\001-001_frames'
-    output_dir = r'C:\COMP9800\Dataset\real-colon-seg'
+    print(f"Loaded lesion info for {len(lesion_info)} lesions.")
+    lable_set = sorted(list(set(lesion_info.values())))
+    print(f"Lesion classes: {lable_set}")
+    print(lable_set)
+
+    frames = '001-009'
+    annotation_xml_dir = f"/media/qzhao9/backup/downloads/real-colon/{frames}_annotations"
+    images_dir = f'/media/qzhao9/backup/downloads/real-colon/{frames}_frames'
+    output_dir = f'/media/qzhao9/backup/downloads/real-colon/output/{frames}_processed'
+    annoted_img_dir = os.path.join(output_dir,'bbox_images')
+    yolo_ann = f'{output_dir}/yolo_bbox'
+
+    os.makedirs(os.path.join(output_dir,'images'), exist_ok=True)
+    os.makedirs(os.path.join(output_dir,'annotations'), exist_ok=True)
+    os.makedirs(os.path.join(output_dir,'bbox'), exist_ok=True)
+    os.makedirs(yolo_ann, exist_ok=True)
+    os.makedirs(annoted_img_dir, exist_ok=True)
+
     xml_files = [f for f in os.listdir(annotation_xml_dir) if f.endswith(".xml")]
     img_with_lesions = []
-    for xml_file in tqdm(xml_files):
+    for xml_file in tqdm(xml_files, desc=f"Processing XML files {frames}"):
         file_path = os.path.join(annotation_xml_dir, xml_file)
         parsed = parse_annotation_xml(file_path)
         if parsed['entities']:
@@ -161,6 +167,21 @@ if __name__ == "__main__":
                 json.dump(parsed, open(target_annotation_path,'w'), indent=4)
                 # save the parsed bbox as csv file: class_name, xmin, ymin, xmax, ymax
                 csv_file_path = os.path.join(output_dir, 'bbox', xml_file.replace('.xml','.csv'))
+                yolo_ann_file = os.path.join(yolo_ann, xml_file.replace('.xml','.txt'))
+                with open(yolo_ann_file, 'w') as yf:
+                    for lesion_id, entity in parsed['entities'].items():
+                        if entity['bounds']:
+                            class_name = lesion_info.get(lesion_id, 'polyp')
+                            xmin, ymin, xmax, ymax = entity['bounds']
+                            # Convert to YOLO format: class_id x_center y_center width height (normalized)
+                            class_id = lable_set.index(class_name)  # map class_name to class_id
+                            x_center = (xmin + xmax) / 2 / parsed['size']['width']
+                            y_center = (ymin + ymax) / 2 / parsed['size']['height']
+                            width = (xmax - xmin) / parsed['size']['width']
+                            height = (ymax - ymin) / parsed['size']['height']
+                            yf.write(f"{class_id} {x_center} {y_center} {width} {height}\n")
+                
+                image = cv2.imread(target_img_path)
                 with open(csv_file_path, 'w') as f:
                     f.write("class_name,xmin,ymin,xmax,ymax\n")
                     for lesion_id, entity in parsed['entities'].items():
@@ -168,4 +189,13 @@ if __name__ == "__main__":
                             class_name = lesion_info.get(lesion_id, 'polyp')
                             xmin, ymin, xmax, ymax = entity['bounds']
                             f.write(f"{class_name},{xmin},{ymin},{xmax},{ymax}\n")
+                            # Draw bounding box on the image
+                            x_min, y_min, x_max, y_max = int(xmin), int(ymin), int(xmax), int(ymax)
+                            cv2.rectangle(image, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
+                            # Draw label at the corner of the bbox
+                            cv2.putText(image, str(class_name), (x_min, y_min - 10), 
+                                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                # Save the image with bounding boxes
+                cv2.imwrite(os.path.join(annoted_img_dir, parsed['image']), image)
+
     print('Annotated images:',len(img_with_lesions))
