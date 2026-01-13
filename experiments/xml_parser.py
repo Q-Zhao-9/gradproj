@@ -1,4 +1,4 @@
-"""Simple parser for the annotation XML files used in this project.
+"""Simple parser for the annotation XML files used in the real-colon dataset.
 
 This parser is tailored to files like the example provided by the user:
 
@@ -135,15 +135,15 @@ if __name__ == "__main__":
     print(f"Loaded lesion info for {len(lesion_info)} lesions.")
     lable_set = sorted(list(set(lesion_info.values())))
     print(f"Lesion classes: {lable_set}")
-    print(lable_set)
 
-    frames = '001-009'
+    frames = '003-014'
     annotation_xml_dir = f"/media/qzhao9/backup/downloads/real-colon/{frames}_annotations"
     images_dir = f'/media/qzhao9/backup/downloads/real-colon/{frames}_frames'
-    output_dir = f'/media/qzhao9/backup/downloads/real-colon/output/{frames}_processed'
+    output_dir = f'/media/qzhao9/新加卷/datasets/real-colon-seg/{frames}_processed'
     annoted_img_dir = os.path.join(output_dir,'bbox_images')
     yolo_ann = f'{output_dir}/yolo_bbox'
 
+    os.makedirs(output_dir, exist_ok=True)
     os.makedirs(os.path.join(output_dir,'images'), exist_ok=True)
     os.makedirs(os.path.join(output_dir,'annotations'), exist_ok=True)
     os.makedirs(os.path.join(output_dir,'bbox'), exist_ok=True)
