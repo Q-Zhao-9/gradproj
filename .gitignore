@@ -209,6 +209,7 @@ __marimo__/
 experiments/fine_tuned_models/
 experiments/fine_tuning_logs/
 experiments/lora_sd_turbo_150/
+experiments/images/
 runs/
 *.py
 
