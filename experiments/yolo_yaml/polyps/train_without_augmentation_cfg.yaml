@@ -1,0 +1,20 @@
+# train_custom.yaml
+# 'mode' is required only for CLI usage
+# mode: train
+data: /home/qzhao9/datasets/real-colon-seg/yolo/real-colon.yaml
+model: yolo11n.pt
+epochs: 100
+batch: 16
+imgsz: 768
+dropout: 0.3
+name: train_without_augmentation
+# Augmentation parameters set to zero to disable augmentation
+hsv_h: 0.0
+hsv_s: 0.0
+hsv_v: 0.0
+translate: 0.0
+scale: 0.0
+fliplr: 0.0
+mosaic: 0.0
+erasing: 0.0
+auto_augment: None

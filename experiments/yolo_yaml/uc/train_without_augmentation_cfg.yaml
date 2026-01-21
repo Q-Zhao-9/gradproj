@@ -1,0 +1,21 @@
+# train_custom.yaml
+# 'mode' is required only for CLI usage
+# mode: train
+data: /home/qzhao9/Downloads/LIMUC
+model: /home/qzhao9/code/9800/gradproj/experiments/runs/classify/train2/weights/best.pt
+epochs: 100
+batch: 16
+#imgsz: 300
+dropout: 0.3
+#augment: True
+name: train_without_augmentation
+# Augmentation parameters set to zero to disable augmentation
+hsv_h: 0.0
+hsv_s: 0.0
+hsv_v: 0.0
+translate: 0.0
+scale: 0.0
+fliplr: 0.0
+mosaic: 0.0
+erasing: 0.0
+auto_augment: None

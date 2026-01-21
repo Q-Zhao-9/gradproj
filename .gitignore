@@ -211,5 +211,6 @@ experiments/fine_tuning_logs/
 experiments/lora_sd_turbo_150/
 experiments/images/
 runs/
-*.py
+# *.py
+unsloth_compiled_cache/
 
